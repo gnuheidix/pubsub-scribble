@@ -20,13 +20,17 @@ pubsub.subscribe({name:pubsubChannel}, function(msg){
     }
 });
 
+var getConfig = function(mouseX, mouseY){
+    return {
+        name: pubsubChannel
+        , x: (mouseX - canvas.offsetLeft)
+        , y: (mouseY - canvas.offsetTop)
+    };
+};
+
 document.addEventListener('mousemove',function(evt){
     if(mouse){
-        var config = {name: pubsubChannel
-                        , x: evt.clientX
-                        , y: evt.clientY
-        };
-        pubsub.publish(config);
+        pubsub.publish(getConfig(evt.clientX, evt.clientY));
     }
 });
 
@@ -36,11 +40,7 @@ document.addEventListener('mouseup', function(evt){
 
 document.addEventListener('mousedown', function(evt){
     mouse = true;
-    var config = {name: pubsubChannel
-                    , x: evt.clientX
-                    , y: evt.clientY
-    };
-    pubsub.publish(config);
+    pubsub.publish(getConfig(evt.clientX, evt.clientY));
 });
 
 resize();
