@@ -1,0 +1,75 @@
+@font-face{
+ font-family:      'Ubuntu';
+ font-style:       normal;
+ font-weight:      normal;
+ src:              url('/files/ubuntu-normal.eot');
+ src:              local('Ubuntu'),
+                   url('/files/ubuntu-normal.woff') format('woff');
+}
+@font-face{
+ font-family:      'Ubuntu';
+ font-style:       normal;
+ font-weight:      bold;
+ src:              url('/files/ubuntu-bold.eot');
+ src:              local('Ubuntu Bold'),
+                   local('Ubuntu-Bold'),
+                   url('/files/ubuntu-bold.woff') format('woff');
+}
+*{
+ color:            #000000;
+ font-family:      "Ubuntu", sans-serif;
+}
+body{
+ margin:           .5em;
+}
+.nav ul{
+ margin: 0 auto;
+ width: 1000px;
+}
+a{
+ color:            #000000;
+ text-decoration:  underline;
+}
+a:hover, a:focus{
+ color:            #0000FF;
+}
+a:active{
+ background-color: #FFFFFF;
+ color:            #FF0000;
+}
+.nav ul{
+ list-style-type:  none;
+ padding:          0;
+}
+.nav ul li{
+ display:          inline;
+ padding-left:     .25em;
+ padding-right:    .25em;
+}
+.header{
+ border-bottom:    .2em solid #000000;
+ min-height:       1em;
+ font-size:        1.1em;
+ padding-bottom:   .3em;
+}
+.header a{
+ font-weight:      bold;
+}
+.footer{
+ border-top:       .2em solid #000000;
+ text-align:       right;
+ padding-top:      .3em;
+}
+.footer a{
+ font-size:        .9em;
+}
+input{
+ margin:0;
+ padding:0;
+}
+@media screen and (max-width: 1024px) {
+ #maincontent, .nav ul{
+  margin: auto;
+  width: auto;
+ }
+}

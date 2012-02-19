@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; 
-charset=utf-8">
-        <title>Scribble - gnuheidix.de</title>
-        <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-        <style type="text/css">
-*{
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-a{
-    float: right;
-    color: #000000;
-}
-        </style>
-    </head>
-    <body>
-	<a href="http://gnuheidix.de/impressum.html">Impressum</a>
-        <canvas id="spielwiese"></canvas>
-        <script src='pubsub.io.js'></script>
-        <script src='move.js'></script>
-    </body>
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Scribble - gnuheidix.de</title>
+  <meta name="description" content="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS." />
+  <meta name="author" content="Thomas Heidrich" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="style.css" />
+ </head>
+ <body>
+  <div class="header nav" id="oben">
+   <ul>
+    <li><a href="/" title="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS.">Scribble - Kritzelbrett</a></li>
+    <li><input id="farbe" value="000000" class="color {pickerMode:'HVS', 
+slider:false}"></li>
+   </ul>
+  </div>
+  <div id="maincontent">
+   <canvas id="spielwiese"></canvas>
+  </div>
+  <div class="footer nav" id="unten">
+   <ul>
+    <li><a href="http://gnuheidix.de/">gnuheidix.de</a></li>
+    <li><a href="http://flattr.com/thing/221259/gnuheidix-on-Flattr" 
+title="Externer Link zu meiner Flattr-Seite - Ich würde mich sehr freuen, 
+wenn Du mich flattrst. :-)">Flattr</a></li>
+    <li><a href="http://gnuheidix.de/impressum.html">Impressum</a></li>
+   </ul>
+  </div>
+  <script src='pubsub.io.js'></script>
+  <script src="jscolor/jscolor.js"></script>
+  <script src='move.js'></script>
+ </body>
 </html>
