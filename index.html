@@ -12,8 +12,13 @@
  <body>
   <div class="header nav" id="oben">
    <ul>
-    <li><a href="/" title="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS.">Scribble - Kritzelbrett</a></li>
-    <li><input id="farbe" value="000000" class="color {pickerMode:'HVS', slider:false}"></li>
+    <li>
+     <a href="/" title="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS.">Scribble - Kritzelbrett</a>
+    </li>
+    <li>
+     <input maxlength=0 class="color {pickerMode:'HVS', slider:false, valueElement:'farbe'}" readonly="readonly" />
+     <input id="farbe" type="hidden" value="000000" />
+    </li>
    </ul>
   </div>
   <div id="maincontent">

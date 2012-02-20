@@ -63,9 +63,9 @@ a:active{
 .footer a{
  font-size:        .9em;
 }
-input{
- margin:0;
- padding:0;
+.color{
+ border: 0;
+ width: 4em;
 }
 @media screen and (max-width: 1024px) {
  #maincontent, .nav ul{
