@@ -1,9 +1,9 @@
-var pubsub = pubsubio.connect('gnuheidix.de:8080');
+var socket = io.connect('http://127.0.0.1:3001');
+
 var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
 var footer = document.getElementById('unten');
-var pubsubChannel = 'move';
 var mouse = false;
 
 var resize = function(){
@@ -17,8 +17,7 @@ var resize = function(){
 
 var getConfig = function(mouseX, mouseY){
     return {
-        name: pubsubChannel
-        , x: mouseX - canvas.offsetLeft
+        x: mouseX - canvas.offsetLeft
         , y: mouseY - canvas.offsetTop
         , c: picker.value
     };
@@ -26,7 +25,7 @@ var getConfig = function(mouseX, mouseY){
 
 document.addEventListener('mousemove',function(evt){
     if(mouse){
-        pubsub.publish(getConfig(evt.clientX, evt.clientY));
+        socket.emit('move', getConfig(evt.clientX, evt.clientY));
     }
 });
 
@@ -36,17 +35,25 @@ document.addEventListener('mouseup', function(evt){
 
 document.addEventListener('mousedown', function(evt){
     mouse = true;
-    pubsub.publish(getConfig(evt.clientX, evt.clientY));
+
+    socket.emit('move', getConfig(evt.clientX, evt.clientY));
 });
 
 window.onresize = resize;
 
 resize();
 
-pubsub.subscribe({name:pubsubChannel}, function(msg){
-    if(canvas.getContext){
-        var ctx = canvas.getContext('2d');
-	ctx.fillStyle = '#' + msg.c;
-        ctx.fillRect(msg.x, msg.y, -10, -10);
-    }
+socket.on('connect', function () {
+    console.log('connected');
+
+    socket.on('moved', function(pos) {
+        console.log('test');
+
+        if(canvas.getContext){
+            var ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#' + pos.c;
+            ctx.fillRect(pos.x, pos.y, -10, -10);
+        }    
+
+    });
 });
