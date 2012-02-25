@@ -1,4 +1,4 @@
-var socket = io.connect('http://127.0.0.1:3001');
+var socket = io.connect('http://scribble.gnuheidix.de:8080');
 
 var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
