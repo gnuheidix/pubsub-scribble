@@ -29,6 +29,11 @@ document.addEventListener('mousemove',function(evt){
     }
 });
 
+document.addEventListener('touchmove',function(evt){
+    evt.preventDefault();
+    socket.emit('move', getConfig(evt.clientX, evt.clientY));
+});
+
 document.addEventListener('mouseup', function(evt){
     mouse = false;
 });
