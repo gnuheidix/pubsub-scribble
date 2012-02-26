@@ -11,7 +11,7 @@ var resize = function(){
     var windowH = window.innerHeight;
     var headerH = header.offsetHeight;
     var footerH = footer.offsetHeight;
-    canvas.setAttribute('width', windowW);
+    canvas.setAttribute('width', windowW - 10);
     canvas.setAttribute('height', windowH - footerH - headerH - 50);
 }
 
