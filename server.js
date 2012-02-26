@@ -1,6 +1,7 @@
 var io = require('socket.io').listen(8080);
 
 io.configure(function(){
+        io.set('origin', 'scribble.gnuheidix.de:8080')
 	io.enable('browser client minification');  // send minified client
 	io.enable('browser client etag');          // apply etag caching logic based on version number
 	io.enable('browser client gzip');          // gzip the file
