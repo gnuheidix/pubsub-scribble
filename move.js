@@ -41,7 +41,7 @@ document.addEventListener('mouseup', function(evt){
 document.addEventListener('mousedown', function(evt){
     mouse = true;
 
-    socket.emit('move', getConfig(evt.clientX, evt.clientY));
+    socket.emit('newPos', getConfig(evt.clientX, evt.clientY));
 });
 
 window.onresize = resize;
@@ -51,14 +51,24 @@ resize();
 socket.on('connect', function () {
     console.log('connected');
 
-    socket.on('moved', function(pos) {
-        console.log('test');
-
-        if(canvas.getContext){
-            var ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#' + pos.c;
-            ctx.fillRect(pos.x, pos.y, -10, -10);
-        }    
-
-    });
+	if(canvas.getContext){
+		var ctx = canvas.getContext('2d');
+    
+    	socket.on('moved', function(pos) {
+            ctx.strokeStyle = '#' + pos.c;
+            ctx.lineWidth = 10;
+	
+			ctx.lineTo(pos.x, pos.y);   
+			ctx.stroke();      
+   	 	});
+    
+    	socket.on('posChanged', function(pos) {
+			ctx.beginPath();
+			
+			ctx.fillStyle = '#' + pos.c;
+			
+			ctx.moveTo(pos.x, pos.y);
+            ctx.fillRect(pos.x - 5, pos.y - 5, 10, 10);       
+    	});
+    }
 });
