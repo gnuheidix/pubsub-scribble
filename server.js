@@ -18,4 +18,8 @@ io.sockets.on('connection', function(socket) {
 	socket.on('move', function(pos) {
 		io.sockets.emit('moved', pos);
 	});
+	
+	socket.on('newPos', function(pos) {
+		io.sockets.emit('posChanged', pos);
+	});
 });
