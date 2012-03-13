@@ -1,4 +1,4 @@
 A multi-client scribble board using HTML5-Canvas as drawing and
 http://socket.io/ (WebSockets) as communication technology.
 
-Its purpose is to show how easy it can be to create a PubSub application.
+Its purpose is to show how easy it can be to create a WebSocket application in nodejs.
