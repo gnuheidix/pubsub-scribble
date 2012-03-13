@@ -5,7 +5,7 @@
   <title>Scribble - gnuheidix.de</title>
   <meta name="description" content="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS dienen soll." />
   <meta name="author" content="Thomas Heidrich" />
-  <meta name="viewport" content="width=device-width,initial-scale=1", user-scalable=no" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="stylesheet" href="style.css" />
  </head>
@@ -18,6 +18,9 @@
     <li>
      <input maxlength=0 class="color {pickerMode:'HVS', slider:false, valueElement:'farbe', pickerFaceColor:'transparent', pickerFace:0, pickerBorder:0, pickerInsetColor:'black'}" readonly="readonly" />
      <input id="farbe" type="hidden" value="FF0000" />
+    </li>
+    <li>
+     <input id="pngexport" type="button" value="PNG exportieren" />
     </li>
    </ul>
   </div>

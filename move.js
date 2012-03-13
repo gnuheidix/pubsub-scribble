@@ -4,6 +4,7 @@ var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
 var footer = document.getElementById('unten');
+var pngexp = document.getElementById('pngexport');
 var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
@@ -55,6 +56,16 @@ document.addEventListener('mousedown', function(evt){
 
 window.onresize = initUI();
 
+pngexp.addEventListener('click', function(evt){
+    exportwindow = window.open('', 'export');
+    exportwindow.document.writeln('<img '
+                                    + 'src="'+canvas.toDataURL('image/png')+'"'
+                                    + 'alt="Kritzelexport"'
+                                    + '/>'
+    );
+    exportwindow.document.close();
+})
+
 // UI init
 initUI();
 
@@ -70,7 +81,7 @@ socket.on('connect', function () {
                 ctx.strokeStyle = '#' + pos.c;
                 ctx.lineWidth = 10;
                 ctx.moveTo(pos.oldX, pos.oldY);
-                ctx.lineTo(pos.x, pos.y);   
+                ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
             }else{ // short distance => rectangle
                 ctx.fillStyle = '#' + pos.c;
