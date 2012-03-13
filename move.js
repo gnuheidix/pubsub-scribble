@@ -30,10 +30,27 @@ var getConfig = function(mouseX, mouseY){
     };
 };
 
+var drawLine = function(pos){
+	if(canvas.getContext){
+        var ctx = canvas.getContext('2d');
+        
+        ctx.beginPath();
+        ctx.strokeStyle = '#' + pos.c;
+        ctx.lineWidth = 10;
+        ctx.lineCap = 'round';
+        ctx.moveTo(pos.oldX, pos.oldY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        ctx.closePath();
+    }
+}
+
 // setup of UI events (socket send)
 document.addEventListener('mousemove',function(evt){
     if(mouse){
-        socket.emit('move', getConfig(evt.clientX, evt.clientY));
+    	tmpPos = getConfig(evt.clientX, evt.clientY);
+        socket.emit('move', tmpPos);
+        drawLine(tmpPos);
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -48,7 +65,9 @@ document.addEventListener('mousedown', function(evt){
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
     
-    socket.emit('move', getConfig(evt.clientX, evt.clientY));
+    tmpPos = getConfig(evt.clientX, evt.clientY);
+    socket.emit('move', tmpPos);
+    drawLine(tmpPos);
 });
 
 window.onresize = initUI();
@@ -79,14 +98,7 @@ socket.on('connect', function () {
         var ctx = canvas.getContext('2d');
         
         socket.on('moved', function(pos){
-            ctx.beginPath();
-            ctx.strokeStyle = '#' + pos.c;
-            ctx.lineWidth = 10;
-            ctx.lineCap = 'round';
-            ctx.moveTo(pos.oldX, pos.oldY);
-            ctx.lineTo(pos.x, pos.y);
-            ctx.stroke();
-            ctx.closePath();
+            drawLine(pos);
         });
     }
 });

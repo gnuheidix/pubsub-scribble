@@ -24,7 +24,7 @@ var posOK = function(posObj){
 io.sockets.on('connection', function(socket) {
     socket.on('move', function(pos){
         if(posOK(pos)){
-            io.sockets.emit('moved', pos);
+			socket.broadcast.emit('moved', pos);
         }
     });
 });
