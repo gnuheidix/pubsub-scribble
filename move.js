@@ -30,27 +30,49 @@ var getConfig = function(mouseX, mouseY){
     };
 };
 
-// setup of UI events (socket send)
-document.addEventListener('mousemove',function(evt){
+var handleMouseMove = function(evt){
     if(mouse){
         socket.emit('move', getConfig(evt.clientX, evt.clientY));
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
-});
+};
 
-document.addEventListener('mouseup', function(evt){
-    mouse = false;
-});
+var handleTouchMove = function(evt){
+    evt.preventDefault();
+    
+    if(evt.changedTouches.length == 1){ // disable multitouch
+        handleMouseMove(evt.changedTouches[0]);
+    }
+};
 
-document.addEventListener('mousedown', function(evt){
+var handleMouseDown = function(evt){
     mouse = true;
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
     
     socket.emit('move', getConfig(evt.clientX, evt.clientY));
-});
+};
 
+var handleTouchStart = function(evt){
+    if(evt.changedTouches.length == 1){ // disable multitouch
+        mouse = true;
+        oldMouseX = evt.changedTouches[0].clientX;
+        oldMouseY = evt.changedTouches[0].clientY;
+    }
+};
+
+var handleMouseUp = function(){
+    mouse = false;
+};
+
+// setup of UI events (socket send)
+document.addEventListener('mousedown', handleMouseDown);
+document.addEventListener('mouseup', handleMouseUp);
+document.addEventListener('mousemove', handleMouseMove);
+document.addEventListener('touchmove', handleTouchMove);
+document.addEventListener('touchstart', handleTouchStart);
+document.addEventListener('touchend', handleMouseUp);
 window.onresize = initUI();
 
 pngexp.addEventListener('click', function(evt){
@@ -74,7 +96,7 @@ initUI();
 // socket receive events
 socket.on('connect', function () {
     console.log('connected');
-
+    
     if(canvas.getContext){
         var ctx = canvas.getContext('2d');
         
