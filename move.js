@@ -8,6 +8,7 @@ var pngexp = document.getElementById('pngexport');
 var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
+var exportNumber = 1;
 
 // convenience functions
 var initUI = function(){
@@ -53,14 +54,19 @@ document.addEventListener('mousedown', function(evt){
 window.onresize = initUI();
 
 pngexp.addEventListener('click', function(evt){
-    exportwindow = window.open('', 'export');
+    exportwindow = window.open('', 'export' + exportNumber);
+    exportwindow.document.writeln('<html><head>');
+    exportwindow.document.writeln('<title>PNG Export ' + exportNumber + ' - Scribble - gnuheidix.de</title>');
+    exportwindow.document.writeln('</head><body>');
     exportwindow.document.writeln('<img '
                                     + 'src="'+canvas.toDataURL('image/png')+'"'
                                     + 'alt="Kritzelexport"'
                                     + '/>'
     );
+    exportwindow.document.writeln('</body></html>');
     exportwindow.document.close();
-})
+    ++exportNumber;
+});
 
 // UI init
 initUI();
