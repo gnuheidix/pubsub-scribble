@@ -75,14 +75,16 @@ socket.on('connect', function () {
 
     if(canvas.getContext){
         var ctx = canvas.getContext('2d');
-    
+        
         socket.on('moved', function(pos){
             if(getDistance(pos) > 5){ // long distance => line
+                ctx.beginPath();
                 ctx.strokeStyle = '#' + pos.c;
                 ctx.lineWidth = 10;
                 ctx.moveTo(pos.oldX, pos.oldY);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
+                ctx.closePath();
             }else{ // short distance => rectangle
                 ctx.fillStyle = '#' + pos.c;
                 ctx.fillRect(pos.x - 5, pos.y - 5, 10, 10);
