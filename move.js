@@ -1,5 +1,6 @@
 var socket = io.connect('http://scribble.gnuheidix.de:8080');
 
+
 var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
@@ -30,12 +31,27 @@ var getConfig = function(mouseX, mouseY){
     };
 };
 
-var drawLine = function(pos){
+var hexToRGBA = function(color, alpha) {
+    r = parseInt( color.substring(0,2), 16);
+    g = parseInt( color.substring(2,4), 16);
+    b = parseInt( color.substring(4,6), 16);
+
+    return ('rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')');
+};
+
+var drawLine = function(pos, local){
 	if(canvas.getContext){
         var ctx = canvas.getContext('2d');
         
         ctx.beginPath();
-        ctx.strokeStyle = '#' + pos.c;
+
+        if (local) {
+            ctx.strokeStyle = hexToRGBA(pos.c, 0.1);
+        }
+        else {
+            ctx.strokeStyle = '#' + pos.c;
+        }
+
         ctx.lineWidth = 10;
         ctx.lineCap = 'round';
         ctx.moveTo(pos.oldX, pos.oldY);
@@ -43,14 +59,14 @@ var drawLine = function(pos){
         ctx.stroke();
         ctx.closePath();
     }
-}
+};
 
 // setup of UI events (socket send)
 document.addEventListener('mousemove',function(evt){
     if(mouse){
     	tmpPos = getConfig(evt.clientX, evt.clientY);
         socket.emit('move', tmpPos);
-        drawLine(tmpPos);
+        drawLine(tmpPos, true);
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -67,7 +83,7 @@ document.addEventListener('mousedown', function(evt){
     
     tmpPos = getConfig(evt.clientX, evt.clientY);
     socket.emit('move', tmpPos);
-    drawLine(tmpPos);
+    drawLine(tmpPos, true);
 });
 
 window.onresize = initUI();
@@ -98,7 +114,7 @@ socket.on('connect', function () {
         var ctx = canvas.getContext('2d');
         
         socket.on('moved', function(pos){
-            drawLine(pos);
+            drawLine(pos, false);
         });
     }
 });
