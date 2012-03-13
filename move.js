@@ -29,10 +29,6 @@ var getConfig = function(mouseX, mouseY){
     };
 };
 
-var getDistance = function(posObj){
-    return Math.abs(posObj.x - posObj.oldX) + Math.abs(posObj.y - posObj.oldY);
-};
-
 // setup of UI events (socket send)
 document.addEventListener('mousemove',function(evt){
     if(mouse){
@@ -77,18 +73,14 @@ socket.on('connect', function () {
         var ctx = canvas.getContext('2d');
         
         socket.on('moved', function(pos){
-            if(getDistance(pos) > 5){ // long distance => line
-                ctx.beginPath();
-                ctx.strokeStyle = '#' + pos.c;
-                ctx.lineWidth = 10;
-                ctx.moveTo(pos.oldX, pos.oldY);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-                ctx.closePath();
-            }else{ // short distance => rectangle
-                ctx.fillStyle = '#' + pos.c;
-                ctx.fillRect(pos.x - 5, pos.y - 5, 10, 10);
-            }
+            ctx.beginPath();
+            ctx.strokeStyle = '#' + pos.c;
+            ctx.lineWidth = 10;
+            ctx.lineCap = 'round';
+            ctx.moveTo(pos.oldX, pos.oldY);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            ctx.closePath();
         });
     }
 });
