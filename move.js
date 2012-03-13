@@ -5,8 +5,11 @@ var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
 var footer = document.getElementById('unten');
 var mouse = false;
+var oldMouseX = 0;
+var oldMouseY = 0;
 
-var resize = function(){
+// convenience functions
+var initUI = function(){
     var windowW = window.innerWidth;
     var windowH = window.innerHeight;
     var headerH = header.offsetHeight;
@@ -17,21 +20,25 @@ var resize = function(){
 
 var getConfig = function(mouseX, mouseY){
     return {
-        x: mouseX - canvas.offsetLeft
-        , y: mouseY - canvas.offsetTop
+        x: mouseX - canvas.offsetLeft - 5
+        , y: mouseY - canvas.offsetTop - 5
         , c: picker.value
+        , oldX: oldMouseX - canvas.offsetLeft - 5
+        , oldY: oldMouseY - canvas.offsetTop - 5
     };
 };
 
+var getDistance = function(posObj){
+    return Math.abs(posObj.x - posObj.oldX) + Math.abs(posObj.y - posObj.oldY);
+};
+
+// setup of UI events (socket send)
 document.addEventListener('mousemove',function(evt){
     if(mouse){
         socket.emit('move', getConfig(evt.clientX, evt.clientY));
     }
-});
-
-document.addEventListener('touchmove',function(evt){
-    evt.preventDefault();
-    socket.emit('move', getConfig(evt.clientX, evt.clientY));
+    oldMouseX = evt.clientX;
+    oldMouseY = evt.clientY;
 });
 
 document.addEventListener('mouseup', function(evt){
@@ -40,35 +47,35 @@ document.addEventListener('mouseup', function(evt){
 
 document.addEventListener('mousedown', function(evt){
     mouse = true;
-
-    socket.emit('newPos', getConfig(evt.clientX, evt.clientY));
+    oldMouseX = evt.clientX;
+    oldMouseY = evt.clientY;
+    
+    socket.emit('move', getConfig(evt.clientX, evt.clientY));
 });
 
-window.onresize = resize;
+window.onresize = initUI();
 
-resize();
+// UI init
+initUI();
 
+// socket receive events
 socket.on('connect', function () {
     console.log('connected');
 
-	if(canvas.getContext){
-		var ctx = canvas.getContext('2d');
+    if(canvas.getContext){
+        var ctx = canvas.getContext('2d');
     
-    	socket.on('moved', function(pos) {
-            ctx.strokeStyle = '#' + pos.c;
-            ctx.lineWidth = 10;
-	
-			ctx.lineTo(pos.x, pos.y);   
-			ctx.stroke();      
-   	 	});
-    
-    	socket.on('posChanged', function(pos) {
-			ctx.beginPath();
-			
-			ctx.fillStyle = '#' + pos.c;
-			
-			ctx.moveTo(pos.x, pos.y);
-            ctx.fillRect(pos.x - 5, pos.y - 5, 10, 10);       
-    	});
+        socket.on('moved', function(pos){
+            if(getDistance(pos) > 5){ // long distance => line
+                ctx.strokeStyle = '#' + pos.c;
+                ctx.lineWidth = 10;
+                ctx.moveTo(pos.oldX, pos.oldY);
+                ctx.lineTo(pos.x, pos.y);   
+                ctx.stroke();
+            }else{ // short distance => rectangle
+                ctx.fillStyle = '#' + pos.c;
+                ctx.fillRect(pos.x - 5, pos.y - 5, 10, 10);
+            }
+        });
     }
 });
