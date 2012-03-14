@@ -1,6 +1,12 @@
-var socket = io.connect('http://scribble.gnuheidix.de:8080');
+/*
+ * pubsub-scribble client
+ *
+ * @license MIT License
+ * @author  Thomas Heidrich, Adrian Kummerländer
+ * @copyright Copyright (c) 2012 Thomas Heidrich and other authors
+ */
 
-
+// basic initializations
 var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
@@ -10,6 +16,23 @@ var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
 var exportNumber = 1;
+
+// connection establishment
+var socket = io.connect('http://scribble.gnuheidix.de:8080', {
+    'connect timeout': 5000,
+    'reconnect': true,
+    'reconnection delay': 500,
+    'max reconnection attempts': 10,
+    'try multiple transports': true,
+    'transports':  [
+        'websocket',
+        'flashsocket',
+        'htmlfile',
+        'xhr-polling',
+        'xhr-multipart',
+        'jsonp-polling',
+    ]
+});
 
 // convenience functions
 var initUI = function(){
@@ -21,7 +44,7 @@ var initUI = function(){
     canvas.setAttribute('height', windowH - footerH - headerH - 50);
 }
 
-var getConfig = function(mouseX, mouseY){
+var getPos = function(mouseX, mouseY){
     return {
         x: mouseX - canvas.offsetLeft - 5
         , y: mouseY - canvas.offsetTop - 5
@@ -64,9 +87,9 @@ var drawLine = function(pos, local){
 // setup of UI events (socket send)
 var handleMouseMove = function(evt){
     if(mouse){
-        tmpPos = getConfig(evt.clientX, evt.clientY);
-        socket.emit('move', tmpPos);
-        drawLine(tmpPos, true);
+        curPos = getPos(evt.clientX, evt.clientY);
+        socket.emit('move', curPos);
+        drawLine(curPos, true);
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -85,9 +108,9 @@ var handleMouseDown = function(evt){
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
     
-    tmpPos = getConfig(evt.clientX, evt.clientY);
-    socket.emit('move', tmpPos);
-    drawLine(tmpPos, true);
+    curPos = getPos(evt.clientX, evt.clientY);
+    socket.emit('move', curPos);
+    drawLine(curPos, true);
 };
 
 var handleTouchStart = function(evt){
@@ -96,6 +119,23 @@ var handleTouchStart = function(evt){
         oldMouseX = evt.changedTouches[0].clientX;
         oldMouseY = evt.changedTouches[0].clientY;
     }
+};
+
+var handlePNGExport = function(evt){
+    exportwindow = window.open('', 'export' + exportNumber);
+    exportwindow.document.writeln('<html><head>');
+    exportwindow.document.writeln('<title>PNG Export '
+                                    + exportNumber
+                                    + ' - Scribble - gnuheidix.de</title>');
+    exportwindow.document.writeln('</head><body>');
+    exportwindow.document.writeln('<img '
+                                    + 'src="'+canvas.toDataURL('image/png')+'"'
+                                    + 'alt="Kritzelexport"'
+                                    + '/>'
+    );
+    exportwindow.document.writeln('</body></html>');
+    exportwindow.document.close();
+    ++exportNumber;
 };
 
 var handleMouseUp = function(){
@@ -109,35 +149,23 @@ document.addEventListener('mousemove', handleMouseMove);
 document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchstart', handleTouchStart);
 document.addEventListener('touchend', handleMouseUp);
-window.onresize = initUI();
 
-pngexp.addEventListener('click', function(evt){
-    exportwindow = window.open('', 'export' + exportNumber);
-    exportwindow.document.writeln('<html><head>');
-    exportwindow.document.writeln('<title>PNG Export ' + exportNumber + ' - Scribble - gnuheidix.de</title>');
-    exportwindow.document.writeln('</head><body>');
-    exportwindow.document.writeln('<img '
-                                    + 'src="'+canvas.toDataURL('image/png')+'"'
-                                    + 'alt="Kritzelexport"'
-                                    + '/>'
-    );
-    exportwindow.document.writeln('</body></html>');
-    exportwindow.document.close();
-    ++exportNumber;
-});
+// setup of UI events (misc)
+pngexp.addEventListener('click', handlePNGExport);
+window.onresize = initUI;
 
 // UI init
 initUI();
 
-// socket receive events
+// setup socket receive events
 socket.on('connect', function () {
     console.log('connected');
     
-    if(canvas.getContext){
-        var ctx = canvas.getContext('2d');
-        
-        socket.on('moved', function(pos){
-            drawLine(pos, false);
-        });
-    }
+    socket.on('moved', function(pos){
+        drawLine(pos, false);
+    });
+});
+
+socket.on('disconnect', function(){
+    console.log('disconnected');
 });
