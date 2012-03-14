@@ -20,7 +20,6 @@ io.configure(function(){
         'flashsocket',
         'htmlfile',
         'xhr-polling',
-        'xhr-multipart',
         'jsonp-polling',
     ]);
 });
