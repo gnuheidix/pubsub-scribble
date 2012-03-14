@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2012 Thomas Heidrich and other authors
  */
 
-var io = require('socket.io').listen(8080);
+var io = require('socket.io').listen(843);
 var check = require('validator').check;
 
 io.configure(function(){

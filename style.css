@@ -68,9 +68,14 @@ a:active{
  width:             4em;
 }
 #pngexport{
- height:            1.4em;
+ font-size:         .8em;
  background-color:  #FFFFFF;
- border:            1px solid;
+ border:            0;
+}
+#status{
+ font-size:         .9em;
+ padding-left:      .5em;
+ border-left:       .1em dashed;
 }
 @media screen and (max-width: 1024px) {
  #maincontent, .nav ul{

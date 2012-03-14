@@ -11,6 +11,7 @@ var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
 var footer = document.getElementById('unten');
+var status = document.getElementById('status');
 var pngexp = document.getElementById('pngexport');
 var mouse = false;
 var oldMouseX = 0;
@@ -18,7 +19,7 @@ var oldMouseY = 0;
 var exportNumber = 1;
 
 // connection establishment
-var socket = io.connect('http://scribble.gnuheidix.de:8080', {
+var socket = io.connect('http://scribble.gnuheidix.de:843', {
     'connect timeout': 5000,
     'reconnect': true,
     'reconnection delay': 500,
@@ -159,7 +160,7 @@ initUI();
 
 // setup socket receive events
 socket.on('connect', function () {
-    console.log('connected');
+    status.innerHtml = '<span style="color=#00FF00;">verbunden</span>';
     
     socket.on('moved', function(pos){
         drawLine(pos, false);
@@ -167,5 +168,5 @@ socket.on('connect', function () {
 });
 
 socket.on('disconnect', function(){
-    console.log('disconnected');
+    status.innerHtml = '<span style="color:#FF0000;">getrennt</span>';
 });
