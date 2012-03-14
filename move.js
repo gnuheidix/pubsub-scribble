@@ -88,8 +88,8 @@ var drawLine = function(pos, local){
 var handleMouseMove = function(evt){
     if(mouse){
         curPos = getPos(evt.clientX, evt.clientY);
-        socket.emit('move', curPos);
         drawLine(curPos, true);
+        socket.emit('move', curPos);
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -109,8 +109,8 @@ var handleMouseDown = function(evt){
     oldMouseY = evt.clientY;
     
     curPos = getPos(evt.clientX, evt.clientY);
-    socket.emit('move', curPos);
     drawLine(curPos, true);
+    socket.emit('move', curPos);
 };
 
 var handleTouchStart = function(evt){
