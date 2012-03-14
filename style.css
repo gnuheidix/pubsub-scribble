@@ -74,6 +74,7 @@ a:active{
 }
 #status{
  font-size:         .9em;
+ font-weight:       bold;
  padding-left:      .5em;
  border-left:       .1em dashed;
 }

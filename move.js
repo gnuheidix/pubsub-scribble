@@ -19,7 +19,7 @@ var oldMouseY = 0;
 var exportNumber = 1;
 
 // connection establishment
-var socket = io.connect('http://scribble.gnuheidix.de:843', {
+var socket = io.connect('http://scribble.gnuheidix.de:8080', {
     'connect timeout': 5000,
     'reconnect': true,
     'reconnection delay': 500,
@@ -159,8 +159,8 @@ window.onresize = initUI;
 initUI();
 
 // setup socket receive events
-socket.on('connect', function () {
-    status.innerHtml = '<span style="color=#00FF00;">verbunden</span>';
+socket.on('connect', function(){
+    status.innerHTML = '<span style="color:#00FF00;">verbunden</span>';
     
     socket.on('moved', function(pos){
         drawLine(pos, false);
@@ -168,5 +168,15 @@ socket.on('connect', function () {
 });
 
 socket.on('disconnect', function(){
-    status.innerHtml = '<span style="color:#FF0000;">getrennt</span>';
+    status.innerHTML = '<span style="color:#FF0000;">getrennt</span>';
 });
+
+socket.on('reconnecting', function(){
+    status.innerHTML = '<span style="color:#FFFF00;">verbinde...</span>';
+});
+
+socket.on('reconnect_failed', function(){
+    status.innerHTML = '<span style="color:#FF0000;">wiederverbinden fehlgeschlagen</span>';
+});
+
+

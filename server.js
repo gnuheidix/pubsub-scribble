@@ -6,7 +6,7 @@
  * @copyright Copyright (c) 2012 Thomas Heidrich and other authors
  */
 
-var io = require('socket.io').listen(843);
+var io = require('socket.io').listen(8080);
 var check = require('validator').check;
 
 io.configure(function(){
@@ -14,6 +14,8 @@ io.configure(function(){
     io.enable('browser client etag');           // apply etag caching logic
     io.enable('browser client gzip');           // gzip the file
     io.set('log level', 1);                     // reduce logging
+    io.set('heartbeat interval', 6);            // short period heartbeats
+    io.set('heartbeat timeout', 10);            //     and timeout
     // enable all transports
     io.set('transports', [
         'websocket',
