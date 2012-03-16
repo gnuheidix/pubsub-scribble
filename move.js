@@ -17,6 +17,7 @@ var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
 var exportNumber = 1;
+var toolMode = 0;
 
 // connection establishment
 var socket = io.connect('http://scribble.gnuheidix.de:8080', {
@@ -52,6 +53,7 @@ var getPos = function(mouseX, mouseY){
         , c: picker.value
         , oldX: oldMouseX - canvas.offsetLeft - 5
         , oldY: oldMouseY - canvas.offsetTop - 5
+        , t: toolMode
     };
 };
 
@@ -66,17 +68,26 @@ var hexToRGBA = function(color, alpha) {
 var drawLine = function(pos, local){
     if(canvas.getContext){
         var ctx = canvas.getContext('2d');
-        
         ctx.beginPath();
         
-        if (local){
+        if(local){
             ctx.strokeStyle = hexToRGBA(pos.c, 0.1);
-        }
-        else{
+        }else{
             ctx.strokeStyle = '#' + pos.c;
         }
+        switch(pos.t){
+            case '0':
+                ctx.lineWidth = 1;
+                break;
+            default:
+            case '1':
+                ctx.lineWidth = 6;
+                break;
+            case '2':
+                ctx.lineWidth = 12;
+                break;
+        }
         
-        ctx.lineWidth = 10;
         ctx.lineCap = 'round';
         ctx.moveTo(pos.oldX, pos.oldY);
         ctx.lineTo(pos.x, pos.y);
@@ -105,6 +116,7 @@ var handleTouchMove = function(evt){
 };
 
 var handleMouseDown = function(evt){
+    toolMode = document.getElementById('werkzeug').value;
     mouse = true;
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -115,6 +127,7 @@ var handleMouseDown = function(evt){
 };
 
 var handleTouchStart = function(evt){
+    toolMode = document.getElementById('werkzeug').value;
     if(evt.changedTouches.length == 1){ // disable multitouch
         mouse = true;
         oldMouseX = evt.changedTouches[0].clientX;

@@ -63,13 +63,10 @@ a:active{
 .footer a{
  font-size:        .9em;
 }
-.color{
- border:            0;
- width:             4em;
-}
-#pngexport{
+#pngexport, #werkzeug, .color{
  font-size:         .8em;
- background-color:  #FFFFFF;
+ background:        #FFFFFF;
+ width:             4.5em;
  border:            0;
 }
 #status{
