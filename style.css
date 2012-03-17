@@ -2,18 +2,18 @@
  font-family:      'Ubuntu';
  font-style:       normal;
  font-weight:      normal;
- src:              url('/files/ubuntu-normal.eot');
+ src:              url('ubuntu-normal.eot');
  src:              local('Ubuntu'),
-                   url('/files/ubuntu-normal.woff') format('woff');
+                   url('ubuntu-normal.woff') format('woff');
 }
 @font-face{
  font-family:      'Ubuntu';
  font-style:       normal;
  font-weight:      bold;
- src:              url('/files/ubuntu-bold.eot');
+ src:              url('ubuntu-bold.eot');
  src:              local('Ubuntu Bold'),
                    local('Ubuntu-Bold'),
-                   url('/files/ubuntu-bold.woff') format('woff');
+                   url('ubuntu-bold.woff') format('woff');
 }
 *{
  color:            #000000;
