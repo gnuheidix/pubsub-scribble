@@ -11,7 +11,7 @@ var canvas = document.getElementById('spielwiese');
 var picker = document.getElementById('farbe');
 var header = document.getElementById('oben');
 var footer = document.getElementById('unten');
-var status = document.getElementById('status');
+var connStatus= document.getElementById('status');
 var pngexp = document.getElementById('pngexport');
 var mouse = false;
 var oldMouseX = 0;
@@ -173,7 +173,7 @@ initUI();
 
 // setup socket receive events
 socket.on('connect', function(){
-    status.innerHTML = '<span style="color:#00FF00;">verbunden</span>';
+    connStatus.innerHTML = '<span style="color:#00FF00;">verbunden</span>';
     
     socket.on('moved', function(pos){
         drawLine(pos, false);
@@ -181,15 +181,15 @@ socket.on('connect', function(){
 });
 
 socket.on('disconnect', function(){
-    status.innerHTML = '<span style="color:#FF0000;">getrennt</span>';
+    connStatus.innerHTML = '<span style="color:#FF0000;">getrennt</span>';
 });
 
 socket.on('reconnecting', function(){
-    status.innerHTML = '<span style="color:#FFFF00;">verbinde...</span>';
+    connStatus.innerHTML = '<span style="color:#FFFF00;">verbinde...</span>';
 });
 
 socket.on('reconnect_failed', function(){
-    status.innerHTML = '<span style="color:#FF0000;">wiederverbinden fehlgeschlagen</span>';
+    connStatus.innerHTML = '<span style="color:#FF0000;">wiederverbinden fehlgeschlagen</span>';
 });
 
 
