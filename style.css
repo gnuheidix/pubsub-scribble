@@ -46,6 +46,9 @@ a:active{
  padding-left:     .25em;
  padding-right:    .25em;
 }
+.nav ul li .descr{
+ font-size:	 	   .8em;
+}
 .header{
  border-bottom:    .2em solid #000000;
  min-height:       1em;
@@ -74,6 +77,13 @@ a:active{
  font-weight:       bold;
  padding-left:      .5em;
  border-left:       .1em dashed;
+}
+#spielwiese{
+ z-index: 			0;
+}
+#helperlayer{
+ position: 			absolute;
+ z-index:			1;
 }
 @media screen and (max-width: 1024px) {
  #maincontent, .nav ul{
