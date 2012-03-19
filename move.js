@@ -22,7 +22,7 @@ var toolMode = 0;
 var crosshairs = false;
 
 // connection establishment
-var socket = io.connect('http://127.0.0.1:8080', {
+var socket = io.connect('http://scribble.gnuheidix.de:8080', {
     'connect timeout': 5000,
     'reconnect': true,
     'reconnection delay': 500,
