@@ -7,17 +7,19 @@
  */
 
 // basic initializations
-var canvas = document.getElementById('spielwiese');
-var picker = document.getElementById('farbe');
-var header = document.getElementById('oben');
-var footer = document.getElementById('unten');
-var connStatus= document.getElementById('status');
+var canvas  = document.getElementById('spielwiese');
+var helper  = document.getElementById('helperlayer');
+var picker  = document.getElementById('farbe');
+var header  = document.getElementById('oben');
+var footer  = document.getElementById('unten');
+var connStatus = document.getElementById('status');
 var pngexp = document.getElementById('pngexport');
 var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
 var exportNumber = 1;
 var toolMode = 0;
+var crosshairs = false;
 
 // connection establishment
 var socket = io.connect('http://scribble.gnuheidix.de:8080', {
@@ -44,15 +46,17 @@ var initUI = function(){
     var footerH = footer.offsetHeight;
     canvas.setAttribute('width', windowW - 10);
     canvas.setAttribute('height', windowH - footerH - headerH - 50);
+    helper.setAttribute('width', windowW - 10);
+    helper.setAttribute('height', windowH - footerH - headerH - 50);
 }
 
 var getPos = function(mouseX, mouseY){
     return {
-        x: mouseX - canvas.offsetLeft - 5
-        , y: mouseY - canvas.offsetTop - 5
+        x: mouseX - canvas.offsetLeft
+        , y: mouseY - canvas.offsetTop
         , c: picker.value
-        , oldX: oldMouseX - canvas.offsetLeft - 5
-        , oldY: oldMouseY - canvas.offsetTop - 5
+        , oldX: oldMouseX - canvas.offsetLeft
+        , oldY: oldMouseY - canvas.offsetTop
         , t: toolMode
     };
 };
@@ -96,12 +100,47 @@ var drawLine = function(pos, local){
     }
 };
 
+var clearHelperLayer = function(){
+    if(helper.getContext){
+        helper.getContext('2d').clearRect(0,0,helper.width,helper.height);
+    }
+};
+
+var drawCrosshairs = function(mouseX, mouseY){
+    if(helper.getContext){
+        var ctx = helper.getContext('2d');
+
+        mouseX = mouseX - helper.offsetLeft;
+        mouseY = mouseY - helper.offsetTop; 
+
+        ctx.beginPath();
+        
+        ctx.clearRect(0,0,helper.width,helper.height)
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'silver';
+        
+        ctx.moveTo(mouseX, 0);
+        ctx.lineTo(mouseX, helper.height);
+
+        ctx.moveTo(0, mouseY);
+        ctx.lineTo(helper.width, mouseY);
+
+        ctx.stroke();
+
+        ctx.closePath();
+    }  
+};
+
 // setup of UI events (socket send)
 var handleMouseMove = function(evt){
     if(mouse){
         curPos = getPos(evt.clientX, evt.clientY);
         drawLine(curPos, true);
         socket.emit('move', curPos);
+    }
+    if(crosshairs){
+        drawCrosshairs(evt.clientX, evt.clientY);   
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -156,6 +195,15 @@ var handleMouseUp = function(){
     mouse = false;
 };
 
+var handleCrosshairCheck = function(){
+    if(document.getElementById('crosshairs').checked){
+        crosshairs = true;  
+    }else{
+        crosshairs = false;    
+        clearHelperLayer();      
+    }
+};
+
 // setup of UI events (socket send)
 document.addEventListener('mousedown', handleMouseDown);
 document.addEventListener('mouseup', handleMouseUp);
@@ -163,6 +211,8 @@ document.addEventListener('mousemove', handleMouseMove);
 document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchstart', handleTouchStart);
 document.addEventListener('touchend', handleMouseUp);
+
+document.getElementById('crosshairs').addEventListener('click', handleCrosshairCheck);
 
 // setup of UI events (misc)
 pngexp.addEventListener('click', handlePNGExport);
