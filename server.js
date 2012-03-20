@@ -16,11 +16,9 @@ io.configure(function(){
     io.set('log level', 1);                     // reduce logging
     io.set('heartbeat interval', 6);            // short period heartbeats
     io.set('heartbeat timeout', 10);            //     and timeout
-    // enable all transports
+    // enable all supported transports
     io.set('transports', [
         'websocket',
-        'flashsocket',
-        'htmlfile',
         'xhr-polling',
         'jsonp-polling',
     ]);

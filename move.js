@@ -7,34 +7,33 @@
  */
 
 // basic initializations
-var canvas  = document.getElementById('spielwiese');
+var canvas  = document.getElementById('zeichenbrett');
 var helper  = document.getElementById('helperlayer');
 var picker  = document.getElementById('farbe');
 var header  = document.getElementById('oben');
 var footer  = document.getElementById('unten');
 var connStatus = document.getElementById('status');
 var pngexp = document.getElementById('pngexport');
+var crosshair = document.getElementById('fadenkreuz')
 var mouse = false;
 var oldMouseX = 0;
 var oldMouseY = 0;
 var exportNumber = 1;
 var toolMode = 0;
-var crosshairs = false;
+var crosshairMode = false;
 
 // connection establishment
 var socket = io.connect('http://scribble.gnuheidix.de:8080', {
     'connect timeout': 5000,
     'reconnect': true,
     'reconnection delay': 500,
-    'max reconnection attempts': 10,
+    'max reconnection attempts': 8,
     'try multiple transports': true,
     'transports':  [
         'websocket',
-        'flashsocket',
-        'htmlfile',
         'xhr-polling',
-        'xhr-multipart',
         'jsonp-polling',
+        'xhr-multipart',
     ]
 });
 
@@ -106,7 +105,7 @@ var clearHelperLayer = function(){
     }
 };
 
-var drawCrosshairs = function(mouseX, mouseY){
+var drawCrosshair = function(mouseX, mouseY){
     if(helper.getContext){
         var ctx = helper.getContext('2d');
 
@@ -139,8 +138,8 @@ var handleMouseMove = function(evt){
         drawLine(curPos, true);
         socket.emit('move', curPos);
     }
-    if(crosshairs){
-        drawCrosshairs(evt.clientX, evt.clientY);   
+    if(crosshairMode){
+        drawCrosshair(evt.clientX, evt.clientY);   
     }
     oldMouseX = evt.clientX;
     oldMouseY = evt.clientY;
@@ -196,11 +195,11 @@ var handleMouseUp = function(){
 };
 
 var handleCrosshairCheck = function(){
-    if(document.getElementById('crosshairs').checked){
-        crosshairs = true;  
+    if(crosshair.checked){
+        crosshairMode = true;
     }else{
-        crosshairs = false;    
-        clearHelperLayer();      
+        crosshairMode = false;
+        clearHelperLayer();
     }
 };
 
@@ -212,10 +211,9 @@ document.addEventListener('touchmove', handleTouchMove);
 document.addEventListener('touchstart', handleTouchStart);
 document.addEventListener('touchend', handleMouseUp);
 
-document.getElementById('crosshairs').addEventListener('click', handleCrosshairCheck);
-
 // setup of UI events (misc)
 pngexp.addEventListener('click', handlePNGExport);
+crosshair.addEventListener('click', handleCrosshairCheck);
 window.onresize = initUI;
 
 // UI init

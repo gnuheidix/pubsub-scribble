@@ -1,76 +1,77 @@
 @font-face{
- font-family:      'Ubuntu';
- font-style:       normal;
- font-weight:      normal;
- src:              url('ubuntu-normal.eot');
- src:              local('Ubuntu'),
-                   url('ubuntu-normal.woff') format('woff');
+ font-family:       'Ubuntu';
+ font-style:        normal;
+ font-weight:       normal;
+ src:               url('ubuntu-normal.eot');
+ src:               local('Ubuntu'),
+                    url('ubuntu-normal.woff') format('woff');
 }
 @font-face{
- font-family:      'Ubuntu';
- font-style:       normal;
- font-weight:      bold;
- src:              url('ubuntu-bold.eot');
- src:              local('Ubuntu Bold'),
-                   local('Ubuntu-Bold'),
-                   url('ubuntu-bold.woff') format('woff');
+ font-family:       'Ubuntu';
+ font-style:        normal;
+ font-weight:       bold;
+ src:               url('ubuntu-bold.eot');
+ src:               local('Ubuntu Bold'),
+                    local('Ubuntu-Bold'),
+                    url('ubuntu-bold.woff') format('woff');
 }
 *{
- color:            #000000;
- font-family:      "Ubuntu", sans-serif;
+ color:             #000000;
+ font-family:       "Ubuntu", sans-serif;
 }
 body{
- margin:           .5em;
+ margin:            .5em;
 }
 .nav ul{
  margin:            0 auto;
  width:             1000px;
 }
 a{
- color:            #000000;
- text-decoration:  underline;
+ color:             #000000;
+ text-decoration:   underline;
 }
 a:hover, a:focus{
- color:            #0000FF;
+ color:             #0000FF;
 }
 a:active{
- background-color: #FFFFFF;
- color:            #FF0000;
+ background-color:  #FFFFFF;
+ color:             #FF0000;
 }
 .nav ul{
- list-style-type:  none;
- padding:          0;
+ list-style-type:   none;
+ padding:           0;
 }
 .nav ul li{
- display:          inline;
- padding-left:     .25em;
- padding-right:    .25em;
-}
-.nav ul li .descr{
- font-size:	 	   .8em;
+ display:           inline;
+ padding-left:      .25em;
+ padding-right:     .25em;
 }
 .header{
- border-bottom:    .2em solid #000000;
- min-height:       1em;
- font-size:        1.1em;
- padding-bottom:   .3em;
+ border-bottom:     .2em solid #000000;
+ min-height:        1em;
+ font-size:         1.1em;
+ padding-bottom:    .3em;
 }
 .header a{
- font-weight:      bold;
+ font-weight:       bold;
 }
 .footer{
- border-top:       .2em solid #000000;
- text-align:       right;
- padding-top:      .3em;
+ border-top:        .2em solid #000000;
+ text-align:        right;
+ padding-top:       .3em;
 }
 .footer a{
- font-size:        .9em;
+ font-size:         .9em;
 }
-#pngexport, #werkzeug, .color{
+canvas:active, canvas:focus{
+ cursor:            crosshair;
+}
+input, label{
  font-size:         .8em;
  background:        #FFFFFF;
- width:             4.5em;
+ max-width:         4.5em;
  border:            0;
+ vertical-align:    middle;
 }
 #status{
  font-size:         .9em;
@@ -78,14 +79,14 @@ a:active{
  padding-left:      .5em;
  border-left:       .1em dashed;
 }
-#spielwiese{
- z-index: 			0;
+#zeichenbrett{
+ z-index:           0;
 }
 #helperlayer{
- position: 			absolute;
- z-index:			1;
+ position:          absolute;
+ z-index:           1;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1024px){
  #maincontent, .nav ul{
   margin:           auto;
   width:            auto;
