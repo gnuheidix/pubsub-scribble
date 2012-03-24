@@ -49,13 +49,39 @@ var initUI = function(){
     helper.setAttribute('height', windowH - footerH - headerH - 50);
 }
 
-var getPos = function(mouseX, mouseY){
+var getMousePos = function(evt){
+    if (evt.offsetX){
+        // Webkit (!iOS)
+        return {
+            x: evt.offsetX
+            , y: evt.offsetY
+        };
+    } 
+    else if (evt.layerX){
+        // Firefox
+        return {
+            x: evt.layerX
+            , y: evt.layerY
+        };
+    } 
+    else {
+        // iOS
+        return {
+            x: evt.pageX - canvas.offsetLeft
+            , y: evt.pageY - canvas.offsetTop
+        };
+    }
+};
+
+var getPos = function(evt){
+    mousePos = getMousePos(evt);
+
     return {
-        x: mouseX - canvas.offsetLeft
-        , y: mouseY - canvas.offsetTop
+        x: mousePos.x
+        , y: mousePos.y
         , c: picker.value
-        , oldX: oldMouseX - canvas.offsetLeft
-        , oldY: oldMouseY - canvas.offsetTop
+        , oldX: oldMouseX
+        , oldY: oldMouseY
         , t: toolMode
     };
 };
@@ -105,12 +131,13 @@ var clearHelperLayer = function(){
     }
 };
 
-var drawCrosshair = function(mouseX, mouseY){
+var drawCrosshair = function(evt){
     if(helper.getContext){
         var ctx = helper.getContext('2d');
 
-        mouseX = mouseX - helper.offsetLeft;
-        mouseY = mouseY - helper.offsetTop; 
+        mousePos = getMousePos(evt);
+        mouseX = mousePos.x;
+        mouseY = mousePos.y; 
 
         ctx.beginPath();
         
@@ -134,15 +161,15 @@ var drawCrosshair = function(mouseX, mouseY){
 // setup of UI events (socket send)
 var handleMouseMove = function(evt){
     if(mouse){
-        curPos = getPos(evt.clientX, evt.clientY);
+        curPos = getPos(evt);
         drawLine(curPos, true);
         socket.emit('move', curPos);
+        oldMouseX = curPos.x;
+        oldMouseY = curPos.y;
     }
     if(crosshairMode){
-        drawCrosshair(evt.clientX, evt.clientY);   
+        drawCrosshair(evt);   
     }
-    oldMouseX = evt.clientX;
-    oldMouseY = evt.clientY;
 };
 
 var handleTouchMove = function(evt){
@@ -156,10 +183,11 @@ var handleTouchMove = function(evt){
 var handleMouseDown = function(evt){
     toolMode = document.getElementById('werkzeug').value;
     mouse = true;
-    oldMouseX = evt.clientX;
-    oldMouseY = evt.clientY;
+    mousePos = getMousePos(evt);
+    oldMouseX = mousePos.x;
+    oldMouseY = mousePos.y;
     
-    curPos = getPos(evt.clientX, evt.clientY);
+    curPos = getPos(evt);
     drawLine(curPos, true);
     socket.emit('move', curPos);
 };
@@ -168,8 +196,13 @@ var handleTouchStart = function(evt){
     toolMode = document.getElementById('werkzeug').value;
     if(evt.changedTouches.length == 1){ // disable multitouch
         mouse = true;
-        oldMouseX = evt.changedTouches[0].clientX;
-        oldMouseY = evt.changedTouches[0].clientY;
+        mousePos = getMousePos(evt.changedTouches[0]);
+        oldMouseX = mousePos.x;
+        oldMouseY = mousePos.y;
+
+        curPos = getPos(evt.changedTouches[0]);
+        drawLine(curPos, true);
+        socket.emit('move', curPos);
     }
 };
 
@@ -204,12 +237,15 @@ var handleCrosshairCheck = function(){
 };
 
 // setup of UI events (socket send)
-document.addEventListener('mousedown', handleMouseDown);
-document.addEventListener('mouseup', handleMouseUp);
-document.addEventListener('mousemove', handleMouseMove);
-document.addEventListener('touchmove', handleTouchMove);
-document.addEventListener('touchstart', handleTouchStart);
-document.addEventListener('touchend', handleMouseUp);
+if(window.Touch){
+	helper.addEventListener('touchstart', handleTouchStart);
+	helper.addEventListener('touchend', handleMouseUp);
+	helper.addEventListener('touchmove', handleTouchMove);
+}else{
+	helper.addEventListener('mousedown', handleMouseDown);
+	helper.addEventListener('mouseup', handleMouseUp);
+	helper.addEventListener('mousemove', handleMouseMove);
+}
 
 // setup of UI events (misc)
 pngexp.addEventListener('click', handlePNGExport);
