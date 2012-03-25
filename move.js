@@ -160,15 +160,15 @@ var drawCrosshair = function(evt){
 
 // setup of UI events (socket send)
 var handleMouseMove = function(evt){
+    if(crosshairMode){
+        drawCrosshair(evt);   
+    }
     if(mouse){
         curPos = getPos(evt);
         drawLine(curPos, true);
         socket.emit('move', curPos);
         oldMouseX = curPos.x;
         oldMouseY = curPos.y;
-    }
-    if(crosshairMode){
-        drawCrosshair(evt);   
     }
 };
 
