@@ -25,15 +25,28 @@ io.configure(function(){
 });
 
 // checks for malicious content
-var posOK = function(posObj){
-    //check stuff
-    return true;
+// { x: 204, y: 380, c: 'FF0000', oldX: 203, oldY: 379, t: '0' }
+var isValid = function(posObj){
+    var retval = true;
+    try{
+        check(posObj.x).isInt().min(0).max(10000);
+        check(posObj.y).isInt().min(0).max(10000);
+        check(posObj.oldX).isInt().min(0).max(10000);
+        check(posObj.oldY).isInt().min(0).max(10000);
+        check(posObj.t).isInt().min(0).max(2);
+        check(posObj.c).regex(/^[0-9a-f]{6}$/i);
+    }catch(e){
+        retval = false;
+    }
+    return retval;
 };
 
 io.sockets.on('connection', function(socket) {
     socket.on('move', function(pos){
-//        if(posOK(pos)){
+        if(isValid(pos)){
             io.sockets.emit('moved', pos);
-//        }
+        }
     });
 });
+
+module.exports.isValid = isValid;
