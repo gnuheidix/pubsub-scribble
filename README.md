@@ -5,6 +5,9 @@ http://socket.io/ (WebSockets) as communication technology.
 
 Its purpose is to show how easy it can be to create a WebSocket application in nodejs.
 
+## Tests
+Simply run `npm test` :-)
+
 ## License
 
 (The MIT License)

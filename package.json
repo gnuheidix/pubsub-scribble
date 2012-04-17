@@ -1,0 +1,22 @@
+{
+  "author": "Thomas Heidrich and other authors",
+  "name": "pubsub-scribble",
+  "description": "a scribble board using HTML5-Canvas and socket.io ",
+  "version": "0.0.0",
+  "homepage": "http://scribble.gnuheidix.de/",
+  "main": "./server.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gnuheidix/pubsub-scribble.git"
+  },
+  "scripts": {
+    "test": "vows --spec"
+  },
+  "engines": {
+    "node": ">= 0.4"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vows": "0.6.x"
+  }
+}

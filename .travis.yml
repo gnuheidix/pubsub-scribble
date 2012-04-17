@@ -4,3 +4,4 @@ node_js:
   - 0.5
   - 0.6
   - 0.7
+before_script: "npm install && npm install socket.io validator"
