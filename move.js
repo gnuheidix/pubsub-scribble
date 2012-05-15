@@ -9,7 +9,8 @@
 // basic initializations
 var canvas  = document.getElementById('zeichenbrett');
 var helper  = document.getElementById('helperlayer');
-var picker  = document.getElementById('farbe');
+var farbe  = document.getElementById('farbe');
+var picker  = document.getElementById('picker');
 var header  = document.getElementById('oben');
 var footer  = document.getElementById('unten');
 var connStatus = document.getElementById('status');
@@ -79,7 +80,7 @@ var getPos = function(evt){
     return {
         x: mousePos.x
         , y: mousePos.y
-        , c: picker.value
+        , c: farbe.value
         , oldX: oldMouseX
         , oldY: oldMouseY
         , t: toolMode
@@ -134,34 +135,34 @@ var clearHelperLayer = function(){
 var drawCrosshair = function(evt){
     if(helper.getContext){
         var ctx = helper.getContext('2d');
-
+        
         mousePos = getMousePos(evt);
         mouseX = mousePos.x;
         mouseY = mousePos.y; 
-
+        
         ctx.beginPath();
         
-        ctx.clearRect(0,0,helper.width,helper.height)
-
+        clearHelperLayer();//ctx.clearRect(0,0,helper.width,helper.height)
+        
         ctx.lineWidth = 2;
         ctx.strokeStyle = 'silver';
         
         ctx.moveTo(mouseX, 0);
         ctx.lineTo(mouseX, helper.height);
-
+        
         ctx.moveTo(0, mouseY);
         ctx.lineTo(helper.width, mouseY);
-
+        
         ctx.stroke();
-
+        
         ctx.closePath();
-    }  
+    }
 };
 
 // setup of UI events (socket send)
 var handleMouseMove = function(evt){
     if(crosshairMode){
-        drawCrosshair(evt);   
+        drawCrosshair(evt);
     }
     if(mouse){
         curPos = getPos(evt);
@@ -181,6 +182,11 @@ var handleTouchMove = function(evt){
 };
 
 var handleMouseDown = function(evt){
+    // prevent webkit from showing the cursor I
+    evt.preventDefault();
+    // make color picker disappear
+    picker.blur();
+    
     toolMode = document.getElementById('werkzeug').value;
     mouse = true;
     mousePos = getMousePos(evt);
@@ -193,6 +199,8 @@ var handleMouseDown = function(evt){
 };
 
 var handleTouchStart = function(evt){
+    // make color picker disappear
+    picker.blur();
     toolMode = document.getElementById('werkzeug').value;
     if(evt.changedTouches.length == 1){ // disable multitouch
         mouse = true;

@@ -63,7 +63,7 @@ a:active{
 .footer a{
  font-size:         .9em;
 }
-canvas:active, canvas:focus{
+canvas, canvas:active, canvas:focus{
  cursor:            crosshair;
 }
 input, label{

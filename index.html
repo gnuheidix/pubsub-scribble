@@ -16,14 +16,14 @@
      <a href="/" title="Ein Mehrbenutzer-Kritzelbrett, welches als Technologiedemo von PubSub via nodeJS dienen soll. Es setzt socket.io ein.">Scribble - Kritzelbrett</a>
     </li>
     <li>
-     <input maxlength=0 class="color {pickerMode:'HVS', slider:false, valueElement:'farbe', pickerFaceColor:'transparent', pickerFace:0, pickerBorder:0, pickerInsetColor:'black'}" readonly="readonly" />
+     <input id="picker" maxlength=0 class="color {pickerMode:'HVS', slider:false, valueElement:'farbe', pickerFaceColor:'transparent', pickerFace:0, pickerBorder:0, pickerInsetColor:'black'}" readonly="readonly" />
      <input id="farbe" type="hidden" value="FF0000" />
     </li>
     <li>
      <input id="pngexport" type="button" value="Export" />
     </li>
     <li>
-     <select id="werkzeug">
+     <select id="werkzeug" autocomplete="off">
       <optgroup label="Pinsel">
        <option value="0">dünn</option>
        <option value="1">mittel</option>
@@ -32,7 +32,7 @@
      </select>
     </li>
     <li>
-     <input id="fadenkreuz" type="checkbox" />
+     <input id="fadenkreuz" type="checkbox" autocomplete="off" />
      <label for="fadenkreuz">Fadenkreuz</label>
     </li>
    </ul>
