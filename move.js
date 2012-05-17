@@ -318,7 +318,7 @@ var PubSubUI = function(canvasID){
             inputController.mouse = true;
             inputController.updateOldPos(evt.changedTouches[0]);
             
-            var curPos = getDTO(evt.changedTouches[0]);
+            var curPos = inputController.getDTO(evt.changedTouches[0]);
             drawCanvas.drawLine(curPos, true);
             commController.emitMove(curPos);
         }
