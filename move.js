@@ -123,7 +123,7 @@ var InputController = function(colorPickerID, toolPickerID){
     };
 };
 
-var OverlayCanvas = function(canvasID){
+var Canvas = function(canvasID){
     var canvas = document.getElementById(canvasID);
     
     this.initSize = function(width, height){
@@ -137,6 +137,13 @@ var OverlayCanvas = function(canvasID){
         }
     };
     
+    this.addEventHandler = function(event, handler){
+        canvas.addEventListener(event, handler);
+    };
+};
+
+var OverlayCanvas = function(canvasID){
+    var canvas = document.getElementById(canvasID);
     this.drawCrosshair = function(mouseX, mouseY){
         if(canvas.getContext){
             var ctx = canvas.getContext('2d');
@@ -159,19 +166,10 @@ var OverlayCanvas = function(canvasID){
             ctx.closePath();
         }
     };
-    
-    this.addEventHandler = function(event, handler){
-        canvas.addEventListener(event, handler);
-    };
 };
 
 var DrawCanvas = function(canvasID){
     var canvas = document.getElementById(canvasID);
-    
-    this.initSize = function(width, height){
-        canvas.setAttribute('width', width);
-        canvas.setAttribute('height', height);
-    };
     
     var hexToRGBA = function(color, alpha){
         r = parseInt(color.substring(0,2), 16);
@@ -217,6 +215,7 @@ var PubSubUI = function(canvasID){
     /**
      * The canvas we are going to scribble on it.
      */
+    DrawCanvas.prototype = new Canvas(canvasID);
     var drawCanvas = new DrawCanvas(canvasID);
     
     /**
@@ -250,6 +249,7 @@ var PubSubUI = function(canvasID){
     /**
      * Setup overlay and crosshair checkbox
      */
+    OverlayCanvas.prototype = new Canvas('helperlayer');
     var overlay = new OverlayCanvas('helperlayer');
     var crosshair = document.getElementById('fadenkreuz');
     crosshair.addEventListener('click', overlay.clear);
@@ -306,7 +306,7 @@ var PubSubUI = function(canvasID){
         inputController.mouse = true;
         inputController.updateOldPos(evt);
         
-        curPos = inputController.getDTO(evt);
+        var curPos = inputController.getDTO(evt);
         drawCanvas.drawLine(curPos, true);
         commController.emitMove(curPos);
     };
@@ -314,12 +314,11 @@ var PubSubUI = function(canvasID){
     var handleTouchStart = function(evt){
         // make color picker disappear
         picker.blur();
-        inputController.setToolMode(document.getElementById('werkzeug').value);
         if(evt.changedTouches.length == 1){ // disable multitouch
             inputController.mouse = true;
             inputController.updateOldPos(evt.changedTouches[0]);
             
-            curPos = getDTO(evt.changedTouches[0]);
+            var curPos = getDTO(evt.changedTouches[0]);
             drawCanvas.drawLine(curPos, true);
             commController.emitMove(curPos);
         }
