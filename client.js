@@ -39,6 +39,12 @@ var PubSubCommunication = function(url){
         socket.emit('move', dto);
     };
     
+    /**
+     * Adds an event handler to the communication system.
+     * @param string event The event the handler shall wait for.
+     * @param function handler The function which shall be executed in case
+     *     the event gets fired.
+     */
     this.addEventHandler = function(event, handler){
         socket.on(event, handler);
     };
@@ -52,6 +58,10 @@ var CanvasExport = function(canvasID){
     var canvas = document.getElementById(canvasID);
     var exportNumber = 1;
     
+    /**
+     * opens a new window and imports the the content of the
+     * canvas as a png image
+     */
     this.doPNGExport = function(){
         var exportwindow = window.open('', 'export' + exportNumber);
         exportwindow.document.writeln(
@@ -71,12 +81,19 @@ var CanvasExport = function(canvasID){
     };
 };
 
+/**
+ * This class takes care of browser dependent pointer position calculation and
+ * builds the DataTransferObject which will be sent to the hub for publishing.
+ */
 var InputController = function(colorPickerID, toolPickerID){
     var color  = document.getElementById(colorPickerID);
     var tool = document.getElementById(toolPickerID);
     var oldMouseX = 0;
     var oldMouseY = 0;
     
+    /**
+     * Calculates the current pointer position browser dependently.
+     */
     var getMousePos = function(evt){
         if (evt.offsetX){
             // Webkit (!iOS)
@@ -95,14 +112,21 @@ var InputController = function(colorPickerID, toolPickerID){
         else {
             // iOS
             return {
-                x: evt.pageX - canvas.offsetLeft
-                , y: evt.pageY - canvas.offsetTop
+                x: evt.pageX - evt.target.offsetLeft
+                , y: evt.pageY - evt.target.offsetTop
             };
         }
     };
     
+    /**
+     * This property determines whether the pointer is active or not.
+     */
     this.mouse = false;
     
+    /**
+     * Returns a DTO which represents the current input state. This DTO might
+     * be published through the hub.
+     */
     this.getDTO = function(evt){
         var mousePos = getMousePos(evt);
         
@@ -116,6 +140,10 @@ var InputController = function(colorPickerID, toolPickerID){
         };
     };
     
+    /**
+     * Updates the previous mouse position in order to enable the controller
+     * to make the DTO hold an information where the pointer was last time.
+     */
     this.updateOldPos = function(evt){
         var mousePos = getMousePos(evt);
         oldMouseX = mousePos.x;
@@ -123,25 +151,44 @@ var InputController = function(colorPickerID, toolPickerID){
     };
 };
 
+/**
+ * This class is a prototype for canvas elements in the UI.
+ */
 var Canvas = function(canvasID){
     var canvas = document.getElementById(canvasID);
     
+    /**
+     * Sets the size of the canvas.
+     */
     this.initSize = function(width, height){
         canvas.setAttribute('width', width);
         canvas.setAttribute('height', height);
     };
     
+    /**
+     * Drops the content of the canvas.
+     */
     this.clear = function(){
         if(canvas.getContext){
             canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         }
     };
     
+    /**
+     * Adds an event handler to the canvas.
+     * @param string event The event the handler shall wait for.
+     * @param function handler The function which shall be executed in case
+     *     the event gets fired.
+     */
     this.addEventHandler = function(event, handler){
         canvas.addEventListener(event, handler);
     };
 };
 
+/**
+ * This class represents a helper layer for displaying misc stuff over
+ * the actual drawing canvas.
+ */
 var OverlayCanvas = function(canvasID){
     var canvas = document.getElementById(canvasID);
     this.drawCrosshair = function(mouseX, mouseY){
@@ -168,9 +215,18 @@ var OverlayCanvas = function(canvasID){
     };
 };
 
+/**
+ * This class represents the canvas used for drawing.
+ */
 var DrawCanvas = function(canvasID){
     var canvas = document.getElementById(canvasID);
     
+    /**
+     * Converts a hex color into its rgba representation.
+     * @param string color The color to convert as string. e.g. 11aa33
+     * @param double alpha The transparency value the rgba sould have.
+     * @return string The rgba representation. e.g. rgba(1,23,22,0.1)
+     */
     var hexToRGBA = function(color, alpha){
         r = parseInt(color.substring(0,2), 16);
         g = parseInt(color.substring(2,4), 16);
@@ -211,7 +267,10 @@ var DrawCanvas = function(canvasID){
     };
 };
 
-var PubSubUI = function(canvasID){
+/**
+ * This function wires up the HTML UI with all necessary event handlers.
+ */
+var pubSubUI = function(canvasID){
     /**
      * The canvas we are going to scribble on it.
      */
@@ -347,5 +406,5 @@ var PubSubUI = function(canvasID){
 };
 
 // fire up UI
-var uiController = new PubSubUI('zeichenbrett');
+pubSubUI('zeichenbrett');
 
