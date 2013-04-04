@@ -11,6 +11,11 @@
  * @param String url The URL of the hub to communicate with.
  */
 var PubSubCommunication = function(url){
+    
+    if(typeof(io) != 'object'){
+        throw "no socket.io";
+    }
+    
     /**
      * connection establishment during construction
      */
@@ -287,7 +292,13 @@ var pubSubUI = function(canvasID){
     /**
      * Setup communication
      */
-    var commController = new PubSubCommunication('http://scribble.gnuheidix.de:8080');
+    var commController;
+    try{
+        commController = new PubSubCommunication('http://scribble.gnuheidix.de:8080');
+    }catch(e){
+        alert('Serververbindung fehlgeschlagen');
+        return;
+    }
     var connStatus = document.getElementById('status');
     commController.addEventHandler('connect', function(){
         connStatus.innerHTML = '<span style="color:#00FF00;">verbunden</span>';
