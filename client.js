@@ -28,10 +28,9 @@ var PubSubCommunication = function(url){
             'max reconnection attempts': 8,
             'try multiple transports': true,
             'transports': [
-                'websocket',
                 'xhr-polling',
+                'websocket',
                 'jsonp-polling',
-                'xhr-multipart',
             ]
         }
     );

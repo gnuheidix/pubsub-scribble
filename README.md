@@ -1,9 +1,7 @@
 # pubsub-scribble
 
 A multi-client scribble board using HTML5-Canvas as drawing and
-http://socket.io/ (WebSockets) as communication technology.
-
-Its purpose is to show how easy it can be to create a WebSocket application in nodejs.
+http://socket.io/ as communication technology.
 
 ## Tests
 Simply run `npm test` or look at [![Build Status](https://secure.travis-ci.org/gnuheidix/pubsub-scribble.png)](http://travis-ci.org/gnuheidix/pubsub-scribble)

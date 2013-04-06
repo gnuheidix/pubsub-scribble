@@ -18,8 +18,8 @@ io.configure(function(){
     io.set('heartbeat timeout', 10);            //     and timeout
     // enable all supported transports
     io.set('transports', [
-        'websocket',
         'xhr-polling',
+        'websocket',
         'jsonp-polling',
     ]);
 });
