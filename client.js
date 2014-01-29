@@ -123,11 +123,6 @@ var InputController = function(colorPickerID, toolPickerID){
     };
     
     /**
-     * This property determines whether the pointer is active or not.
-     */
-    this.mouse = false;
-    
-    /**
      * Returns a DTO which represents the current input state. This DTO might
      * be published through the hub.
      */
@@ -178,14 +173,12 @@ var Canvas = function(canvasID){
         }
     };
     
-    /**
-     * Adds an event handler to the canvas.
-     * @param string event The event the handler shall wait for.
-     * @param function handler The function which shall be executed in case
-     *     the event gets fired.
-     */
     this.addEventHandler = function(event, handler){
         canvas.addEventListener(event, handler);
+    };
+
+    this.removeEventHandler = function(event, handler){
+        canvas.removeEventListener(event, handler);
     };
 };
 
@@ -351,11 +344,9 @@ var pubSubUI = function(canvasID){
         if(crosshair.checked){
             overlay.drawCrosshair(curPos.x, curPos.y);
         }
-        if(inputController.mouse){
-            drawCanvas.drawLine(curPos, true);
-            commController.emitMove(curPos);
-            inputController.updateOldPos(evt);
-        }
+        drawCanvas.drawLine(curPos, true);
+        commController.emitMove(curPos);
+        inputController.updateOldPos(evt);
     };
     
     var handleTouchMove = function(evt){
@@ -372,7 +363,7 @@ var pubSubUI = function(canvasID){
         // make color picker disappear
         picker.blur();
         
-        inputController.mouse = true;
+        overlay.addEventHandler('mousemove', handleMouseMove);
         inputController.updateOldPos(evt);
         
         var curPos = inputController.getDTO(evt);
@@ -384,7 +375,7 @@ var pubSubUI = function(canvasID){
         // make color picker disappear
         picker.blur();
         if(evt.changedTouches.length == 1){ // disable multitouch
-            inputController.mouse = true;
+            overlay.addEventHandler('touchmove', handleTouchMove);
             inputController.updateOldPos(evt.changedTouches[0]);
             
             var curPos = inputController.getDTO(evt.changedTouches[0]);
@@ -394,19 +385,21 @@ var pubSubUI = function(canvasID){
     };
     
     var handleMouseUp = function(){
-        inputController.mouse = false;
+        overlay.removeEventHandler('mousemove', handleMouseMove);
+    };
+
+    var handleTouchEnd = function(){
+        overlay.removeEventHandler('touchmove', handleTouchMove);
     };
     
     // setup of UI events
     if(window.Touch){
         overlay.addEventHandler('touchstart', handleTouchStart);
-        overlay.addEventHandler('touchend', handleMouseUp);
-        overlay.addEventHandler('touchmove', handleTouchMove);
-    }else{
-        overlay.addEventHandler('mousedown', handleMouseDown);
-        overlay.addEventHandler('mouseup', handleMouseUp);
-        overlay.addEventHandler('mousemove', handleMouseMove);
+        overlay.addEventHandler('touchend', handleTouchEnd);
     }
+    overlay.addEventHandler('mousedown', handleMouseDown);
+    overlay.addEventHandler('mouseup', handleMouseUp);
+    
     window.onresize = function(){
         initUI('oben', 'unten');
     };
