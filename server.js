@@ -7,7 +7,7 @@
  */
 
 var io = require('socket.io').listen(8080);
-var check = require('validator').check;
+var check = require('ender-validator').check;
 
 io.configure(function(){
     io.enable('browser client minification');   // send minified client
