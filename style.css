@@ -1,23 +1,6 @@
-@font-face{
- font-family:       'Ubuntu';
- font-style:        normal;
- font-weight:       normal;
- src:               url('ubuntu-normal.eot');
- src:               local('Ubuntu'),
-                    url('ubuntu-normal.woff') format('woff');
-}
-@font-face{
- font-family:       'Ubuntu';
- font-style:        normal;
- font-weight:       bold;
- src:               url('ubuntu-bold.eot');
- src:               local('Ubuntu Bold'),
-                    local('Ubuntu-Bold'),
-                    url('ubuntu-bold.woff') format('woff');
-}
 *{
  color:             #000000;
- font-family:       "Ubuntu", sans-serif;
+ font-family:       sans-serif;
 }
 body{
  margin:            .5em;
