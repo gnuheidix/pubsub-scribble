@@ -26,11 +26,11 @@ var PubSubCommunication = function(url){
             'reconnect': true,
             'reconnection delay': 500,
             'max reconnection attempts': 8,
-            'try multiple transports': true,
+//            'try multiple transports': true,
             'transports': [
-                'xhr-polling',
+//                'xhr-polling',
                 'websocket',
-                'jsonp-polling',
+//                'jsonp-polling',
             ]
         }
     );
@@ -295,7 +295,7 @@ var pubSubUI = function(canvasID){
     try{
         commController = new PubSubCommunication('http://scribble.gnuheidix.de:8080');
     }catch(e){
-        alert('Serververbindung fehlgeschlagen');
+        alert('Der Scribble-Server ist zur Zeit nicht erreichbar.');
         return;
     }
     var connStatus = document.getElementById('status');
